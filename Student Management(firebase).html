@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Management</title>
+</head>
+<body>
+
+<h2>Student Management System</h2>
+
+Name: <input id="name"><br><br>
+Roll No: <input id="roll"><br><br>
+Branch: <input id="branch"><br><br>
+
+<button id="insert">INSERT</button>
+<button id="update">UPDATE</button>
+<button id="delete">DELETE</button>
+<button id="display">DISPLAY</button>
+
+<div id="output"></div>
+
+<script type="module">
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+
+import { getDatabase, ref, set, update, remove, get }
+from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCC51ZG_ooVHE-6szBVrkWiiAlYdYzxg3g",
+    authDomain: "chitti-23dae.firebaseapp.com",
+    databaseURL: "https://chitti-23dae-default-rtdb.firebaseio.com",
+    projectId: "chitti-23dae",
+    storageBucket: "chitti-23dae.firebasestorage.app",
+    messagingSenderId: "617576890675",
+    appId: "1:617576890675:web:df37978f751c5f8c6e3e46"
+};
+
+const db = getDatabase(initializeApp(firebaseConfig));
+
+const name = document.getElementById("name");
+const roll = document.getElementById("roll");
+const branch = document.getElementById("branch");
+const output = document.getElementById("output");
+
+function studentData() {
+    return {
+        name: name.value,
+        branch: branch.value
+    };
+}
+
+document.getElementById("insert").onclick = () => {
+    if (!roll.value) return alert("Enter Roll Number");
+
+    set(ref(db, "students/" + roll.value), studentData())
+    .then(() => alert("Student inserted successfully"))
+    .catch(e => alert(e.message));
+};
+
+document.getElementById("update").onclick = () => {
+    if (!roll.value) return alert("Enter Roll Number");
+
+    update(ref(db, "students/" + roll.value), studentData())
+    .then(() => alert("Student updated successfully"))
+    .catch(e => alert(e.message));
+};
+
+document.getElementById("delete").onclick = () => {
+    if (!roll.value) return alert("Enter Roll Number");
+
+    remove(ref(db, "students/" + roll.value))
+    .then(() => alert("Student deleted successfully"))
+    .catch(e => alert(e.message));
+};
+
+document.getElementById("display").onclick = () => {
+    get(ref(db, "students")).then(snapshot => {
+        if (!snapshot.exists()) {
+            output.innerHTML = "No data available";
+            return;
+        }
+
+        output.innerHTML = "";
+
+        for (let r in snapshot.val()) {
+            let s = snapshot.val()[r];
+
+            output.innerHTML +=
+                "Roll No: " + r + "<br>" +
+                "Name: " + s.name + "<br>" +
+                "Branch: " + s.branch + "<hr>";
+        }
+    }).catch(e => alert(e.message));
+};
+</script>
+
+</body>
+</html>
