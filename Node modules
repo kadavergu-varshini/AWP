@@ -1,0 +1,71 @@
+
+// 1. OS MODULE
+const os = require('os');
+
+console.log('\n--- OS MODULE ---');
+
+console.log(os.homedir());
+console.log(os.hostname());
+console.log(os.loadavg());
+console.log(os.machine());
+console.log(os.platform());
+console.log(os.release());
+console.log(os.totalmem());
+
+
+// 2. EVENTS MODULE
+const EventEmitter = require('events');
+
+console.log('\n--- EVENTS MODULE ---');
+class MyEmitter extends EventEmitter {}
+
+const emitter = new MyEmitter();
+emitter.on('event', () => {
+    console.log('Event occurred!');
+});
+emitter.emit('event');
+
+
+// 3. FILE SYSTEM MODULE
+const fs = require('fs');
+
+console.log('\n--- FILE SYSTEM MODULE ---');
+
+fs.stat(__filename, (err, stats) => {
+    if (err) {
+        console.error(err);
+    } else {
+        console.log('File found');
+        console.log(stats.size);
+    }
+});
+
+
+// 4. PATH MODULE
+const path = require('path');
+
+console.log('\n--- PATH MODULE ---');
+
+const file = __filename;
+
+console.log(path.dirname(file));
+console.log(path.basename(file));
+console.log(path.extname(file));
+
+
+// 5. HTTP MODULE
+const http = require('http');
+
+console.log('\n--- HTTP MODULE ---');
+const server = http.createServer((req, res) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Hello World!\n');
+});
+
+const PORT = 3000;
+
+server.listen(PORT, 'localhost', () => {
+    console.log(`Server running at http://localhost:${PORT}/`);
+});
+
